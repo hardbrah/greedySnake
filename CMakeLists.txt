@@ -13,9 +13,31 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
-target_link_libraries(main PRIVATE sfml-graphics)
+# add_executable(main src/main.cpp)
+# 自动包含所有源文件
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
+
+add_executable(main ${SOURCES})
+target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+target_link_libraries(main PRIVATE sfml-graphics sfml-audio)
 target_compile_features(main PRIVATE cxx_std_17)
+
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/res/Fonts $<TARGET_FILE_DIR:main>/Fonts
+)
+
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/res/Music $<TARGET_FILE_DIR:main>/Music
+)
+
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/res/Sounds $<TARGET_FILE_DIR:main>/Sounds
+)
+
 
 if(WIN32)
     add_custom_command(

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.scm": "racket",
+        "vector": "cpp",
+        "memory": "cpp"
+    }
+}
