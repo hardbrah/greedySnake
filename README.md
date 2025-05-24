@@ -4,13 +4,18 @@
 
 ```mermaid
 classDiagram
-	class Game
-	Game : +const int Width$
-	Game : +const int Height$
-	Game : +shared_ptr<Screen> Screen
-	Game : +run()
-	Game : +update(Time)
-	Game : +render()
+	class Game{
+		+const int Width$
+		+const int Height$
+		+shared_ptr<Screen> Screen
+		+run()
+		+handleInput()
+		+update(Time)
+		+render()
+		-RenderWindow window_
+		-Music bgMusic_
+		-const Time TimePerFrame$
+	}
 	
 	class MenuScreen
 	MenuScreen : -Font font_
@@ -22,9 +27,9 @@ classDiagram
 	
 	class Screen{
 		<<interface>>
-		+handleInput(RenderWindow)*
+		+handleInput(RenderWindow&)*
 		+update(Time)*
-        +render(RenderWindow)*
+        +render(RenderWindow&)*
 	}
 	
 	class Color{
@@ -35,19 +40,19 @@ classDiagram
 	}
 	
 	class Snake{
-		+handleinput();
+		+handleinput(RenderWindow&);
 		+update(Time)
 		+render(RenderWindow&)
 		+checkFruitCollisions(vector<Fruit>&)
 		+hitSelf() bool
 		+getSize() unsigned
-		-move()
-		-grow()
+		-move(sf::Time)
+		-grow(unsigned short)
 		-checkEdgeCollisions()
 		-initNodes()
 		-bool hitSelf_
 		-Vector2f position_
-		-double direction_
+		-Direction direction_
 		-SoundBuffer pickupBuffer_
 		-Sound pickupSound_
 		-SoundBuffer dieBuffer_
@@ -57,24 +62,32 @@ classDiagram
 	}
 	
 	class SnakeNode{
+		+SnakeNode(Vector2f, bool)
 		+setPosition(vector2f)
 		+setPosition(float, float)
+		+setDirection(Direction)
 		+move(float, float)
 		+render(RenderWindow&)
 		+getPosition() Vector2f
-		+getBound() FloatRect
+		+getBounds() FloatRect
 		+const float Width$
 		+const float Height$
 		-RectangleShape shape_
 		-Vector2f position_
+		-bool isHead_
+		-Texture headTexture_
+		-Sprite headSprite_
+		-Direction direction_
 	}
 	
 	class Fruit{
-		+render(RenderWindow&)*
-		+getBounds() FloatRect*
+		+Fruit(Vector2f, Color, unsigned short)
+		+render(RenderWindow&)
+		+getBounds() FloatRect
+        +getGrowth() unsigned short
+        +getFruitType() FruitType
 		-CircleShape shape_
-		-const Color color_
-		-const unsigned short score_
+		-const FruitType color_
 		-const unsigned short growth_
 		-const float Radius
 	}
@@ -84,13 +97,15 @@ classDiagram
 		+update(Time)
 		+render(RenderWindow&)
 		+generateFruit()
+		-generateFruit(FruitType)
 		-Snake snake_
 		-vector<Fruit> fruit_
 		-Color color_
+		-FruitCount fruitCount_
 	}
 	
 	class FruitFactory{
-		+createFruit(FruitType) Fruit$
+		+createFruit(Vector2f, FruitType) Fruit$
 	}
 	
 	class FruitType{
@@ -111,5 +126,49 @@ classDiagram
 	FruitType <.. FruitFactory
 	FruitType <.. Fruit
 	Color <.. GameScreen
+	FruitFactory <.. GameScreen
+	MenuScreen <.. Game
+	GameScreen <.. Game
+```
+
+```mermaid
+sequenceDiagram
+	actor Player
+	participant Game
+    participant MenuScreen
+	participant GameScreen
+	participant Fruit
+	participant Snake
+	Player->>Game: Game.run(), play bgMusic
+	Game->>MenuScreen: MenuScreen.handleInput(), 
+	Game->>Game: render menu
+	MenuScreen->>Game: Game::Screen =GameScreen, enter game
+	Game->>Game: render game
+	Game->>GameScreen: GameScreen.handleInput()
+	GameScreen->>Snake: Snake.handleInput()
+	GameScreen->>Fruit: update,  5 kinds of fruits through FruitFactory
+	GameScreen->>Snake: update positions, check checkFruitCollisions
+	Snake->>SnakeNode : move
+	SnakeNode->>SnakeNode: move() then grow
+	GameScreen->>Snake: render:sent window
+	Snake->>SnakeNode: render:sent window
+	SnakeNode->>GameScreen: get window then display
+	GameScreen->>Fruit: render: sent window
+	Fruit->>GameScreen: get window then display
+```
+
+```mermaid
+sequenceDiagram
+    Alice->>Bob: Hello Bob, how are you ?
+    Bob->>Alice: Fine, thank you. And you?
+    create participant Carl
+    Alice->>Carl: Hi Carl!
+    create actor D as Donald
+    Carl->>D: Hi!
+    destroy Carl
+    Alice-xCarl: We are too many
+    destroy Bob
+    Bob->>Alice: I agree
+
 ```
 

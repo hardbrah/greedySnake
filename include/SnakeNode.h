@@ -5,28 +5,41 @@
 
 namespace sfSnake
 {
-class SnakeNode
-{
-public:
-	SnakeNode(sf::Vector2f position = sf::Vector2f(0, 0));
+	enum Direction
+	{
+		Up,
+		Right,
+		Down,
+		Left
+	};
+	class SnakeNode
+	{
+	public:
+		SnakeNode(sf::Vector2f position = sf::Vector2f(0, 0), bool isHead = false);
 
-	void setPosition(sf::Vector2f position);
-	void setPosition(float x, float y);
+		void setPosition(sf::Vector2f position);
+		void setPosition(float x, float y);
 
-	void move(float xOffset, float yOffset);
+		void move(float xOffset, float yOffset);
 
-	void render(sf::RenderWindow& window);
+		void render(sf::RenderWindow &window);
 
-	sf::Vector2f getPosition() const;
-	sf::FloatRect getBounds() const;
+		sf::Vector2f getPosition() const;
+		sf::FloatRect getBounds() const;
 
-	static const float Width;
-	static const float Height;
+		static const float Width;
+		static const float Height;
 
-private:
-	sf::RectangleShape shape_;
-	sf::Vector2f position_;
-};
+		void setDirection(Direction direction);
+
+	private:
+		sf::RectangleShape shape_;
+		sf::Vector2f position_;
+		bool isHead_;
+		sf::Texture headTexture_;
+		sf::Sprite headSprite_;
+		Direction direction_; // To rotate the head sprite based on direction
+	};
 }
 
 #endif
