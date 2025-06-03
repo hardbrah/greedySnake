@@ -12,6 +12,22 @@ using namespace sfSnake;
 GameScreen::GameScreen() : snake_()
 {
 	fruitCount_ = {1, 2, 2, 2, 1};
+
+	// Load background texture
+	if (!backgroundTexture_.loadFromFile("Images/background.png"))
+	{
+		// If loading fails, create a default colored background
+		backgroundSprite_.setTextureRect(sf::IntRect(0, 0, Game::Width, Game::Height));
+		backgroundSprite_.setColor(sf::Color(50, 50, 50)); // Dark gray background
+	}
+	else
+	{
+		backgroundSprite_.setTexture(backgroundTexture_);
+		// Scale to fit window
+		float scaleX = static_cast<float>(Game::Width) / backgroundTexture_.getSize().x;
+		float scaleY = static_cast<float>(Game::Height) / backgroundTexture_.getSize().y;
+		backgroundSprite_.setScale(scaleX, scaleY);
+	}
 }
 
 void GameScreen::handleInput(sf::RenderWindow &window)
@@ -32,6 +48,8 @@ void GameScreen::update(sf::Time delta)
 
 void GameScreen::render(sf::RenderWindow &window)
 {
+	window.draw(backgroundSprite_);
+
 	snake_.render(window);
 
 	for (auto fruit : fruit_)

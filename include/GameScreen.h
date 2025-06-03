@@ -27,6 +27,8 @@ namespace sfSnake
 		Snake snake_;
 		std::vector<Fruit> fruit_;
 		FruitCount fruitCount_;
+		sf::Texture backgroundTexture_;
+		sf::Sprite backgroundSprite_;
 	};
 }
 

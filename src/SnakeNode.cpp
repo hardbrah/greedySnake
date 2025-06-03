@@ -40,6 +40,19 @@ SnakeNode::SnakeNode(sf::Vector2f position, bool isHead)
 		// Position the sprite
 		headSprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
 	}
+	else
+	{
+		if (!bodyTexture_.loadFromFile("Images/snake_green_blob_32.png"))
+		{
+			// Fallback if image loading fails
+			std::cout << "Failed to load image" << std::endl;
+			return;
+		}
+		bodySprite_.setTexture(bodyTexture_);
+		bodySprite_.setScale(SnakeNode::Width / bodyTexture_.getSize().x, SnakeNode::Height / bodyTexture_.getSize().y);
+		bodySprite_.setOrigin(bodyTexture_.getSize().x / 2.f, bodyTexture_.getSize().y / 2.f);
+		bodySprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
+	}
 }
 
 void SnakeNode::setPosition(sf::Vector2f position)
@@ -50,6 +63,10 @@ void SnakeNode::setPosition(sf::Vector2f position)
 	if (isHead_)
 	{
 		headSprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
+	}
+	else
+	{
+		bodySprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
 	}
 }
 
@@ -63,6 +80,10 @@ void SnakeNode::setPosition(float x, float y)
 	{
 		headSprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
 	}
+	else
+	{
+		bodySprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
+	}
 }
 
 void SnakeNode::move(float xOffset, float yOffset)
@@ -74,6 +95,10 @@ void SnakeNode::move(float xOffset, float yOffset)
 	if (isHead_)
 	{
 		headSprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
+	}
+	else
+	{
+		bodySprite_.setPosition(position_.x + SnakeNode::Width / 2.f, position_.y + SnakeNode::Height / 2.f);
 	}
 }
 
@@ -115,11 +140,11 @@ void SnakeNode::render(sf::RenderWindow &window)
 	if (isHead_)
 	{
 		headSprite_.setTexture(headTexture_);
-		// setDirection();
 		window.draw(headSprite_);
 	}
 	else
 	{
-		window.draw(shape_);
+		bodySprite_.setTexture(bodyTexture_);
+		window.draw(bodySprite_);
 	}
 }

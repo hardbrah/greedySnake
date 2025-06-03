@@ -79,6 +79,22 @@ void Snake::handleInput(sf::RenderWindow &window)
 		else // 上方向 (225到315度)
 			direction_ = Direction::Up;
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) // 根据键盘方向键改变方向
+	{
+		direction_ = Direction::Up;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		direction_ = Direction::Down;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		direction_ = Direction::Left;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		direction_ = Direction::Right;
+	}
 }
 
 void Snake::update(sf::Time delta)

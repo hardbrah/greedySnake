@@ -38,6 +38,8 @@ namespace sfSnake
 		bool isHead_;
 		sf::Texture headTexture_;
 		sf::Sprite headSprite_;
+		sf::Texture bodyTexture_;
+		sf::Sprite bodySprite_;
 		Direction direction_; // To rotate the head sprite based on direction
 	};
 }
