@@ -70,28 +70,28 @@ void Snake::handleInput(sf::RenderWindow &window)
 			degrees += 360.0f;
 
 		// 根据角度设置方向
-		if (degrees >= 315 || degrees < 45) // 右方向 (-45到45度)
+		if ((degrees >= 315 || degrees < 45) && direction_ != Direction::Left) // 右方向 (-45到45度) 且防止掉头
 			direction_ = Direction::Right;
-		else if (degrees >= 45 && degrees < 135) // 下方向 (45到135度)
+		else if ((degrees >= 45 && degrees < 135) && direction_ != Direction::Up) // 下方向 (45到135度)
 			direction_ = Direction::Down;
-		else if (degrees >= 135 && degrees < 225) // 左方向 (135到225度)
+		else if ((degrees >= 135 && degrees < 225) && direction_ != Direction::Right) // 左方向 (135到225度)
 			direction_ = Direction::Left;
-		else // 上方向 (225到315度)
+		else if (direction_ != Direction::Down) // 上方向 (225到315度)
 			direction_ = Direction::Up;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) // 根据键盘方向键改变方向
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && direction_ != Direction::Down) // 根据键盘方向键改变方向
 	{
 		direction_ = Direction::Up;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction_ != Direction::Up)
 	{
 		direction_ = Direction::Down;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && direction_ != Direction::Right)
 	{
 		direction_ = Direction::Left;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction_ != Direction::Left)
 	{
 		direction_ = Direction::Right;
 	}

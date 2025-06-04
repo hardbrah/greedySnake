@@ -29,6 +29,8 @@ namespace sfSnake
 		FruitCount fruitCount_;
 		sf::Texture backgroundTexture_;
 		sf::Sprite backgroundSprite_;
+		bool grid_;
+		sf::Color gridColor_;
 	};
 }
 

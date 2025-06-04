@@ -3,6 +3,7 @@
 #include <random>
 #include <memory>
 
+#include "Settings.h"
 #include "GameScreen.h"
 #include "GameOverScreen.h"
 #include "Game.h"
@@ -12,22 +13,9 @@ using namespace sfSnake;
 GameScreen::GameScreen() : snake_()
 {
 	fruitCount_ = {1, 2, 2, 2, 1};
-
-	// Load background texture
-	if (!backgroundTexture_.loadFromFile("Images/background.png"))
-	{
-		// If loading fails, create a default colored background
-		backgroundSprite_.setTextureRect(sf::IntRect(0, 0, Game::Width, Game::Height));
-		backgroundSprite_.setColor(sf::Color(50, 50, 50)); // Dark gray background
-	}
-	else
-	{
-		backgroundSprite_.setTexture(backgroundTexture_);
-		// Scale to fit window
-		float scaleX = static_cast<float>(Game::Width) / backgroundTexture_.getSize().x;
-		float scaleY = static_cast<float>(Game::Height) / backgroundTexture_.getSize().y;
-		backgroundSprite_.setScale(scaleX, scaleY);
-	}
+	backgroundSprite_.setTextureRect(sf::IntRect(0, 0, Game::Width, Game::Height));
+	auto &settings = Settings::getInstance();
+	backgroundSprite_.setColor(settings.backgroundColor);
 }
 
 void GameScreen::handleInput(sf::RenderWindow &window)
@@ -48,8 +36,29 @@ void GameScreen::update(sf::Time delta)
 
 void GameScreen::render(sf::RenderWindow &window)
 {
+	auto &settings = Settings::getInstance();
+	window.clear(settings.backgroundColor);
 	window.draw(backgroundSprite_);
+	if (settings.showGrid)
+	{ // 绘制网格
+		sf::VertexArray gridLines(sf::Lines);
+		const int gridSize = 20;
+		// 绘制垂直线
+		for (int x = 0; x <= Game::Width; x += gridSize)
+		{
+			gridLines.append(sf::Vertex(sf::Vector2f(x, 0), settings.gridColor));
+			gridLines.append(sf::Vertex(sf::Vector2f(x, Game::Height), settings.gridColor));
+		}
 
+		// 绘制水平线
+		for (int y = 0; y <= Game::Height; y += gridSize)
+		{
+			gridLines.append(sf::Vertex(sf::Vector2f(0, y), settings.gridColor));
+			gridLines.append(sf::Vertex(sf::Vector2f(Game::Width, y), settings.gridColor));
+		}
+
+		window.draw(gridLines);
+	}
 	snake_.render(window);
 
 	for (auto fruit : fruit_)

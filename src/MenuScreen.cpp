@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "SettingsScreen.h"
 #include "GameScreen.h"
 #include "MenuScreen.h"
 #include "Game.h"
@@ -13,8 +14,9 @@ MenuScreen::MenuScreen()
 	font_.loadFromFile("Fonts/game_over.ttf");
 	text_.setFont(font_);
 	text_.setString(
-		"\n\n\n\n\n\n\n\n\nPress [SPACE] to play"
-		"\n\nPress [ESC] to quit");
+		"\n\n\n\n\nPress [SPACE] to play"
+		"\n\nPress [ESC] to quit"
+		"\n\nPress [S] for Settings");
 
 	snakeText_.setFont(font_);
 	snakeText_.setString("Snake!");
@@ -24,18 +26,22 @@ MenuScreen::MenuScreen()
 
 	sf::FloatRect textBounds = text_.getLocalBounds();
 	text_.setOrigin(textBounds.left + textBounds.width / 2,
-		textBounds.top + textBounds.height / 2);
+					textBounds.top + textBounds.height / 2);
 	text_.setPosition(Game::Width / 2, Game::Height / 2);
 
 	sf::FloatRect snakeTextBounds = snakeText_.getLocalBounds();
 	snakeText_.setOrigin(snakeTextBounds.left + snakeTextBounds.width / 2,
-		snakeTextBounds.top + snakeTextBounds.height / 2);
+						 snakeTextBounds.top + snakeTextBounds.height / 2);
 	snakeText_.setPosition(Game::Width / 2, Game::Height / 4);
 }
 
-void MenuScreen::handleInput(sf::RenderWindow& window)
+void MenuScreen::handleInput(sf::RenderWindow &window)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	// MenuScreen.cpp 的 handleInput 中添加
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		Game::Screen = std::make_shared<SettingsScreen>();
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		Game::Screen = std::make_shared<GameScreen>();
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		window.close();
@@ -69,7 +75,7 @@ void MenuScreen::update(sf::Time delta)
 	}
 }
 
-void MenuScreen::render(sf::RenderWindow& window)
+void MenuScreen::render(sf::RenderWindow &window)
 {
 	window.draw(text_);
 	window.draw(snakeText_);
