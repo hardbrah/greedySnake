@@ -24,6 +24,8 @@ namespace sfSnake
 
 	private:
 		void generateFruit_(FruitType type);
+		void generateObstacles(); // 新增：生成障碍物方法
+
 		Snake snake_;
 		std::vector<Fruit> fruit_;
 		FruitCount fruitCount_;
@@ -31,6 +33,11 @@ namespace sfSnake
 		sf::Sprite backgroundSprite_;
 		bool grid_;
 		sf::Color gridColor_;
+
+		// 新增：障碍物相关
+		std::vector<sf::RectangleShape> obstacles_;
+		static const int ObstacleCount = 5;		 // 障碍物数量
+		static const float MinDistanceFromSpawn; // 距离出生点的最小距离
 	};
 }
 

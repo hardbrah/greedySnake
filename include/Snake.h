@@ -18,12 +18,12 @@ namespace sfSnake
 	public:
 		Snake();
 
-		// 修改handleInput函数声明
 		void handleInput(sf::RenderWindow &window);
 		void update(sf::Time delta);
 		void render(sf::RenderWindow &window);
 
 		void checkFruitCollisions(std::vector<Fruit> &fruits, FruitCount &fruitCount);
+		bool checkObstacleCollisions(const std::vector<sf::RectangleShape> &obstacles); // 新增
 
 		bool hitSelf() const;
 

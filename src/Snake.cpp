@@ -240,3 +240,19 @@ void Snake::render(sf::RenderWindow &window)
 	for (auto &node : nodes_)
 		node.render(window);
 }
+
+bool Snake::checkObstacleCollisions(const std::vector<sf::RectangleShape> &obstacles)
+{
+	sf::FloatRect headBounds = nodes_[0].getBounds();
+
+	for (const auto &obstacle : obstacles)
+	{
+		if (headBounds.intersects(obstacle.getGlobalBounds()))
+		{
+			dieSound_.play();
+			return true;
+		}
+	}
+
+	return false;
+}
